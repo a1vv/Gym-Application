@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="exercise"
+            type="com.example.android.october2021.db.entities.Exercise" />
+    </data>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:padding="14dp"
+        android:layout_height="match_parent">
+
+    </TextView>
+</layout>

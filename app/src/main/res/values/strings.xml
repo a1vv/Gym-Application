@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">October 2021</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">THis text should show up</string>
+    <string name="format">%1$td/%1$tm-%1$ty: %1$tT</string>
+    <string name="format_time">%1$tT - %2$tT</string>
+    <string name="format_date">%1$td/%1$tm-%1$ty</string>
+
+    <string-array name="testarray">
+        <item>Snopp</item>
+        <item>Kuk</item>
+        <item>Bajs</item>
+    </string-array>
+</resources>
