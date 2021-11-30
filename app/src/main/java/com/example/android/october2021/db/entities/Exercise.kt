@@ -14,6 +14,6 @@ data class Exercise(
         var exerciseTitle: String = "Exercise"
 ){
         override fun toString(): String {
-                return exerciseTitle
+                return "[$exerciseId] $exerciseTitle"
         }
 }

@@ -35,7 +35,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="@={exercisesViewModel.textInput}"
-            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button"
             app:layout_constraintStart_toStartOf="parent" />

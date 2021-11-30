@@ -28,6 +28,6 @@ fun TextView.setSessionInfo(item: Session?){
 @BindingAdapter("sessionExerciseTest")
 fun TextView.setSessionExerciseTest(item: SessionExercise?){
     if (item != null) {
-        (item.sessionExerciseText + item.parentExerciseId).also { text = it }
+        (item.sessionExerciseText + " " + item.exercise).also { text = it }
     }
 }

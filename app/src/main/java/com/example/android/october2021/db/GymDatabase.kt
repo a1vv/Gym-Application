@@ -18,7 +18,7 @@ import com.example.android.october2021.db.entities.*
     Exercise::class,
     SessionExercise::class
     ],
-    version = 13, exportSchema = false)
+    version = 16, exportSchema = false)
 abstract class GymDatabase : RoomDatabase() {
 
     /**

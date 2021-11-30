@@ -2,6 +2,9 @@ package com.example.android.october2021.db.entities
 
 import androidx.room.*
 
+/**
+ * A workout-session contains multiple SessionExercises. Has a start and end-time.
+ */
 @Entity(tableName = "sessions")
 data class Session(
     @PrimaryKey(autoGenerate = true)
@@ -18,6 +21,10 @@ data class Session(
 
 )
 
+/**
+ * Every exercise can be connected to multiple SessionExercises (one-many relation)
+ * This data class exists to get a list of all SessionExercises connected to an exercise
+ */
 data class ExerciseWithSessionExercises(
     @Embedded val exercise: Exercise,
     @Relation(
@@ -27,6 +34,10 @@ data class ExerciseWithSessionExercises(
     val sessionExercises: List<SessionExercise>
 )
 
+/**
+ * Every Session has multiple SessionExercises connected to it (one-many relation)
+ * This data class allows you to get a list of all SessionExercises belonging to a Session.
+ */
 data class SessionWithSessionExercises(
     @Embedded val session: Session,
     @Relation(
@@ -36,15 +47,16 @@ data class SessionWithSessionExercises(
     val sessionExercises: List<SessionExercise>
 )
 
-// SessionExercise is an exercise in a session, holds a reference to it's session, and gets
-// exercise-specific information by holding an exerciseId
-
+/**
+ * SessionExercise is an exercise in a session. The exercise it's connected to is embedded
+ */
 @Entity(tableName = "sessionExercises")
 data class SessionExercise(
     @PrimaryKey(autoGenerate = true) var sessionExerciseId: Long = 0,
 
     val sessionExerciseText: String = "cock",
     val parentSessionId: Long,
-    val parentExerciseId: Long
+    val parentExerciseId: Long,
+    @Embedded val exercise: Exercise
 
     )
