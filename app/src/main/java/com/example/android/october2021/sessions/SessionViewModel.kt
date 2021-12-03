@@ -98,18 +98,14 @@ class SessionViewModel(
     }
 
     private suspend fun updateSessionExerciseList() {
-        // TODO: update Session Workouts function
-
         sessionExerciseList.value = withContext(Dispatchers.IO) {
             database.getSessionWithSessionExercises(activeSessionId.value!!).sessionExercises
         }
-
         Log.d("SVM","exercise list updated")
     }
 
     private suspend fun addExerciseToSession() {
         withContext(Dispatchers.IO) {
-            // TODO: implement functionality to associate a workout with a session
             database.insertSessionExercise(
                 SessionExercise(
                     0,
