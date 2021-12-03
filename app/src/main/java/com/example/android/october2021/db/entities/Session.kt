@@ -19,7 +19,7 @@ data class Session(
     @ColumnInfo(name = "training_type")
     var trainingType: String = "",
 
-)
+    )
 
 /**
  * Every exercise can have multiple parent SessionExercises (one-many relation)
@@ -59,21 +59,19 @@ data class SessionExerciseWithExercise(
     )
     val exercise: Exercise
 
-    )
+)
 
-@Entity(primaryKeys = ["sessionExerciseId","exerciseId"])
+@Entity(primaryKeys = ["sessionExerciseId", "exerciseId"])
 data class SessionExerciseExerciseCrossRef(
     val sessionExerciseId: Long,
     @ColumnInfo(index = true) val exerciseId: Long
 )
 
-@Entity(primaryKeys = ["sessionExerciseId","sessionId"])
+@Entity(primaryKeys = ["sessionExerciseId", "sessionId"])
 data class SessionExerciseSessionCrossRef(
     val sessionExerciseId: Long,
     @ColumnInfo(index = true) val sessionId: Long
 )
-
-
 
 /**
  * SessionExercise is an exercise in a session. The exercise it's connected to is embedded
@@ -84,8 +82,8 @@ data class SessionExercise(
 
     val sessionExerciseText: String = "cock",
 
-    val parentSessionId: Long,
-    val parentExerciseId: Long
+    @ColumnInfo(index = true) val parentSessionId: Long,
+    @ColumnInfo(index = true) val parentExerciseId: Long
 
 )
 

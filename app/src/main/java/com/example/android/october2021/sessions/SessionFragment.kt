@@ -78,6 +78,7 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         binding.exercisesList.layoutManager = layoutManager
 
         sessionViewModel.sessionExerciseList.observe(viewLifecycleOwner, {
+            Log.d("SF", "SessionExerciseList updated")
             it?.let {
                 adapter.submitList(it)
             }

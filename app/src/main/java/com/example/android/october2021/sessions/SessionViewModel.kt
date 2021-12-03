@@ -53,6 +53,8 @@ class SessionViewModel(
             sessionExerciseList.value = withContext(Dispatchers.IO){sessionWithSessionExercises.value!!.sessionExercises }
             updateSessionExerciseList()
 
+            Log.d("SVM", sessionWithSessionExercises.value.toString())
+
         }
     }
 
@@ -118,6 +120,8 @@ class SessionViewModel(
             )
         }
         Log.d("SVM","SessionExercise added to session")
+
+        Log.d("SVM",sessionExerciseList.value.toString())
     }
 
     fun onHomeNavigated() {

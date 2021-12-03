@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="sessionExerciseWithExercise"
             type="com.example.android.october2021.db.entities.SessionExerciseWithExercise" />
+
+        <variable
+            name="sessionExercise"
+            type="com.example.android.october2021.db.entities.SessionExercise" />
 
         <variable
             name="sessionViewModel"
@@ -35,17 +40,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv1"
+                tools:text="test 1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:sessionExerciseTest="@{sessionExerciseWithExercise}" />
 
             <TextView
+                android:id="@+id/tv2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv1"
                 app:sessionExerciseInfo="@{sessionExerciseWithExercise}"
-                app:layout_constraintStart_toEndOf="@id/tv1"
-                app:layout_constraintTop_toTopOf="@id/tv1"/>
+                tools:text="test 2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
