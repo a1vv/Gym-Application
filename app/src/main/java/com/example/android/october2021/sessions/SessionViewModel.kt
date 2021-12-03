@@ -3,7 +3,6 @@ package com.example.android.october2021.sessions
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import androidx.room.RoomWarnings
 import com.example.android.october2021.db.GymRepository
 import com.example.android.october2021.db.entities.*
 import kotlinx.coroutines.*
@@ -76,14 +75,14 @@ class SessionViewModel(
 
     private suspend fun getSessionInfoFromDatabase(): Session? {
         return withContext(Dispatchers.IO) {
-            val session = database.getSessionWithId(activeSessionId.value!!)
+            val session = database.getSession(activeSessionId.value!!)
             session
         }
     }
 
     private suspend fun changeSessionEndTime() {
         withContext(Dispatchers.IO) {
-            val session = database.getSessionWithId(activeSessionId.value!!)
+            val session = database.getSession(activeSessionId.value!!)
             val currentSession = database.getLastSession()
             if (currentSession!! == session) {
                 session.endTimeMilli = System.currentTimeMillis()
@@ -111,22 +110,7 @@ class SessionViewModel(
     private suspend fun addExerciseToSession() {
         withContext(Dispatchers.IO) {
             // TODO: implement functionality to associate  a workout with a session
-            var exerciseId = 0L
 
-            if (database.getLastExercise() == null){
-                Log.d("SVM","Exercise ID is null!!")
-            } else {
-                exerciseId = database.getLastExercise()!!.exerciseId
-            }
-
-            // create a new sessionExercise, connected to the current sessionId and the selected exerciseId
-            val sessionExercise = SessionExercise(
-                0,
-                "text",
-                activeSessionId.value!!,
-                exerciseId
-            )
-            database.insertSessionExercise(sessionExercise)
         }
     }
 

@@ -31,9 +31,6 @@ interface GymDatabaseDAO {
     @Query("DELETE FROM sessions")
     suspend fun clearSessions()
 
-    @Query("DELETE FROM exercises")
-    suspend fun clearExercises()
-
     @Query("SELECT * FROM sessions ORDER BY sessionId DESC")
     fun getAllSessions(): LiveData<List<Session>>
 
@@ -50,15 +47,11 @@ interface GymDatabaseDAO {
     fun getSessionWithId(key: Long): Session?
 
     @Query("SELECT * from exercises WHERE exerciseId = :key")
-    fun getWorkoutWithId(key: Long): Exercise?
-
-    @Transaction
-    @Query("SELECT * FROM sessions")
-    fun getSessionAndSessionExercises(): List<SessionWithSessionExercises>
+    fun getExerciseWithId(key: Long): Exercise?
 
     @Transaction
     @Query("SELECT * FROM sessionExercises WHERE parentSessionId = :key")
-    fun getSessionWithExercises(key: Long) : List<SessionExerciseWithExercise>
+    fun getSessionWithSessionExercises(key: Long) : List<SessionExerciseWithExercise>
 
     @Transaction
     @Query("SELECT * FROM exercises")

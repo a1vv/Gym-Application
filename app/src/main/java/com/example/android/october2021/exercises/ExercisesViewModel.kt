@@ -4,11 +4,12 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.android.october2021.db.GymDatabaseDAO
+import com.example.android.october2021.db.GymRepository
 import com.example.android.october2021.db.entities.Exercise
 import kotlinx.coroutines.*
 
 class ExercisesViewModel(
-    val database: GymDatabaseDAO,
+    val database: GymRepository,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -60,8 +61,7 @@ class ExercisesViewModel(
 
     private suspend fun clear() {
         withContext(Dispatchers.IO) {
-            database.clearExercises()
-            database.clearSessions()
+            database.clearAllTables()
         }
     }
 
@@ -89,7 +89,7 @@ class ExercisesViewModel(
 }
 
 class WorkoutsViewModelFactory(
-    private val dataSource: GymDatabaseDAO,
+    private val dataSource: GymRepository,
     private val application: Application
 ) : ViewModelProvider.Factory {
 
