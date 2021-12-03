@@ -16,9 +16,11 @@ import com.example.android.october2021.db.entities.*
 @Database(entities = [
     Session::class,
     Exercise::class,
-    SessionExercise::class
+    SessionExercise::class,
+    SessionExerciseExerciseCrossRef::class,
+    SessionExerciseSessionCrossRef::class
     ],
-    version = 16, exportSchema = false)
+    version = 19, exportSchema = false)
 abstract class GymDatabase : RoomDatabase() {
 
     /**

@@ -22,8 +22,8 @@ class SessionViewModel(
     val textInput = MutableLiveData<String>()
 
     val exercises = MutableLiveData<List<Exercise>>()
-    val sessionExerciseList = MutableLiveData<List<SessionExercise>>()
-    val sessionExercise = MutableLiveData<SessionExercise?>()
+    val sessionExerciseList = MutableLiveData<List<SessionExerciseWithExercise>>()
+    val sessionExercise = MutableLiveData<SessionExerciseWithExercise?>()
 
 
     private val _navigateToHome = MutableLiveData<Long>()
@@ -111,16 +111,20 @@ class SessionViewModel(
     private suspend fun addExerciseToSession() {
         withContext(Dispatchers.IO) {
             // TODO: implement functionality to associate  a workout with a session
-            val exerciseId = database.getLastExercise()!!.exerciseId
+            var exerciseId = 0L
 
+            if (database.getLastExercise() == null){
+                Log.d("SVM","Exercise ID is null!!")
+            } else {
+                exerciseId = database.getLastExercise()!!.exerciseId
+            }
 
             // create a new sessionExercise, connected to the current sessionId and the selected exerciseId
             val sessionExercise = SessionExercise(
                 0,
                 "text",
                 activeSessionId.value!!,
-                exerciseId,
-                database.getLastExercise()!!
+                exerciseId
             )
             database.insertSessionExercise(sessionExercise)
         }

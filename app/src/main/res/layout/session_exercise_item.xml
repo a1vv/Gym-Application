@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="sessionExercise"
-            type="com.example.android.october2021.db.entities.SessionExercise" />
+            name="sessionExerciseWithExercise"
+            type="com.example.android.october2021.db.entities.SessionExerciseWithExercise" />
 
         <variable
             name="sessionViewModel"
@@ -14,14 +14,14 @@
 
         <variable
             name="clickListener"
-            type="com.example.android.october2021.sessionexercises.SessionExerciseListener" />
+            type="com.example.android.october2021.sessionexercises.SessionExerciseWithExerciseListener" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:onClick="@{() -> clickListener.onClick(sessionExercise)}"
+        android:onClick="@{() -> clickListener.onClick(sessionExerciseWithExercise)}"
         app:cardCornerRadius="2dp"
         app:cardElevation="8dp"
         app:cardPreventCornerOverlap="true"
@@ -34,10 +34,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:sessionExerciseTest="@{sessionExercise}"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/tv1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:sessionExerciseTest="@{sessionExerciseWithExercise}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv2"
+                app:sessionExerciseInfo="@{sessionExerciseWithExercise}"
+                app:layout_constraintStart_toEndOf="@id/tv1"
+                app:layout_constraintTop_toTopOf="@id/tv1"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

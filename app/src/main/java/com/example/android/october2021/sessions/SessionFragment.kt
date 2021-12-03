@@ -16,9 +16,8 @@ import com.example.android.october2021.R
 import com.example.android.october2021.db.GymDatabase
 import com.example.android.october2021.databinding.FragmentSessionBinding
 import com.example.android.october2021.db.GymRepository
-import com.example.android.october2021.exercises.ExercisesAdapter
 import com.example.android.october2021.sessionexercises.SessionExerciseAdapter
-import com.example.android.october2021.sessionexercises.SessionExerciseListener
+import com.example.android.october2021.sessionexercises.SessionExerciseWithExerciseListener
 
 class SessionFragment : Fragment(R.layout.fragment_session) {
 
@@ -61,16 +60,17 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
 
-        val adapter = SessionExerciseAdapter(SessionExerciseListener { sessionExerciseId ->
+
+        val adapter = SessionExerciseAdapter(SessionExerciseWithExerciseListener { sessionExerciseId ->
             sessionViewModel.onSessionExerciseClicked(sessionExerciseId)
         })
+
         binding.exercisesList.adapter = adapter
         binding.exercisesList.layoutManager = layoutManager
 
-        sessionViewModel.sessionExerciseList.observe(viewLifecycleOwner, Observer {
+        sessionViewModel.sessionExerciseList.observe(viewLifecycleOwner, {
             it?.let {
                 adapter.submitList(it)
-                Log.d("WF","observed change in session exercises")
             }
         })
 

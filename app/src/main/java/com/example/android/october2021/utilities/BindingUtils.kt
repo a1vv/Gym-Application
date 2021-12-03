@@ -5,6 +5,7 @@ import androidx.databinding.BindingAdapter
 import com.example.android.october2021.db.entities.Session
 import com.example.android.october2021.db.entities.Exercise
 import com.example.android.october2021.db.entities.SessionExercise
+import com.example.android.october2021.db.entities.SessionExerciseWithExercise
 
 @BindingAdapter("exerciseTitle")
 fun TextView.setExerciseTitle(item: Exercise){
@@ -26,8 +27,17 @@ fun TextView.setSessionInfo(item: Session?){
 }
 
 @BindingAdapter("sessionExerciseTest")
-fun TextView.setSessionExerciseTest(item: SessionExercise?){
+fun TextView.setSessionExerciseTest(item: SessionExerciseWithExercise?){
     if (item != null) {
-        (item.sessionExerciseText + " " + item.exercise).also { text = it }
+        text = item.exercise.exerciseTitle
     }
 }
+
+@BindingAdapter("sessionExerciseInfo")
+fun TextView.setSessionExerciseInfo(item: SessionExerciseWithExercise?){
+    if (item != null) {
+        text = item.sessionExercise.sessionExerciseText
+    }
+}
+
+

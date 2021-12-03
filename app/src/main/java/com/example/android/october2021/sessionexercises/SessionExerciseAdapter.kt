@@ -6,30 +6,26 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.october2021.databinding.SessionExerciseItemBinding
-import com.example.android.october2021.db.entities.Session
-import com.example.android.october2021.databinding.SessionItemBinding
-import com.example.android.october2021.db.entities.SessionExercise
-import com.example.android.october2021.sessions.SessionAdapter
-import com.example.android.october2021.sessions.SessionListener
+import com.example.android.october2021.db.entities.SessionExerciseWithExercise
 
-class SessionExerciseAdapter(val clickListener: SessionExerciseListener):
-    ListAdapter<SessionExercise, SessionExerciseAdapter.SessionExerciseHolder>(
-    SessionExerciseDiffCallback()
+class SessionExerciseAdapter(val clickListener: SessionExerciseWithExerciseListener):
+    ListAdapter<SessionExerciseWithExercise, SessionExerciseAdapter.SessionExerciseWithExerciseHolder>(
+    SessionExerciseWithExerciseDiffCallback()
     ) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessionExerciseHolder {
-        return SessionExerciseHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessionExerciseWithExerciseHolder {
+        return SessionExerciseWithExerciseHolder.from(parent)
     }
 
-    override fun onBindViewHolder(holder: SessionExerciseHolder, position: Int) {
+    override fun onBindViewHolder(holder: SessionExerciseWithExerciseHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item!!,clickListener)
     }
 
-    class SessionExerciseHolder(private val binding: SessionExerciseItemBinding): RecyclerView.ViewHolder(binding.root) {
+    class SessionExerciseWithExerciseHolder(private val binding: SessionExerciseItemBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: SessionExercise, clickListener: SessionExerciseListener){
-            binding.sessionExercise = item
+        fun bind(item: SessionExerciseWithExercise, clickListener: SessionExerciseWithExerciseListener){
+            binding.sessionExerciseWithExercise = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
         }
@@ -37,27 +33,27 @@ class SessionExerciseAdapter(val clickListener: SessionExerciseListener):
 
 
         companion object{
-            fun from(parent: ViewGroup): SessionExerciseHolder {
-                val binding = SessionExerciseItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-                return SessionExerciseHolder(binding)
+            fun from(parent: ViewGroup): SessionExerciseWithExerciseHolder {
+                val binding = SessionExerciseItemBinding.inflate(LayoutInflater.from(parent.context),parent, false)
+                return SessionExerciseWithExerciseHolder(binding)
             }
         }
 
     }
 
-    class SessionExerciseDiffCallback : DiffUtil.ItemCallback<SessionExercise>() {
-        override fun areItemsTheSame(oldItem: SessionExercise, newItem: SessionExercise): Boolean {
-            return oldItem.sessionExerciseId == newItem.sessionExerciseId
+    class SessionExerciseWithExerciseDiffCallback : DiffUtil.ItemCallback<SessionExerciseWithExercise>() {
+        override fun areItemsTheSame(oldItem: SessionExerciseWithExercise, newItem: SessionExerciseWithExercise): Boolean {
+            return oldItem.sessionExercise.sessionExerciseId == newItem.sessionExercise.sessionExerciseId
         }
 
-        override fun areContentsTheSame(oldItem: SessionExercise, newItem: SessionExercise): Boolean {
-            return false; // TODO: compare contents of old and new item
+        override fun areContentsTheSame(oldItem: SessionExerciseWithExercise, newItem: SessionExerciseWithExercise): Boolean {
+            return false // TODO: compare contents of old and new item
         }
     }
 
 }
 
-// returns the id of the clicked SessionExercise
-class SessionExerciseListener(val clickListener: (sessionExerciseId: Long) -> Unit){
-    fun onClick(sessionExercise: SessionExercise) = clickListener(sessionExercise.sessionExerciseId)
+// returns the id of the clicked SessionExerciseWithExercise
+class SessionExerciseWithExerciseListener(val clickListener: (sessionExerciseId: Long) -> Unit){
+    fun onClick(sessionExerciseWithExercise: SessionExerciseWithExercise) = clickListener(sessionExerciseWithExercise.sessionExercise.sessionExerciseId)
 }

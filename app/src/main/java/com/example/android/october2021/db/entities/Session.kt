@@ -42,10 +42,38 @@ data class SessionWithSessionExercises(
     @Embedded val session: Session,
     @Relation(
         parentColumn = "sessionId",
-        entityColumn = "parentSessionId"
+        entity = SessionExercise::class,
+        entityColumn = "sessionExerciseId",
+        associateBy = Junction(SessionExerciseSessionCrossRef::class)
     )
-    val sessionExercises: List<SessionExercise>
+    val sessionExercises: List<SessionExerciseWithExercise>
 )
+
+data class SessionExerciseWithExercise(
+    @Embedded val sessionExercise: SessionExercise,
+    @Relation(
+        parentColumn = "sessionExerciseId",
+        entity = Exercise::class,
+        entityColumn = "exerciseId",
+        associateBy = Junction(SessionExerciseExerciseCrossRef::class)
+    )
+    val exercise: Exercise
+
+    )
+
+@Entity(primaryKeys = ["sessionExerciseId","exerciseId"])
+data class SessionExerciseExerciseCrossRef(
+    val sessionExerciseId: Long,
+    val exerciseId: Long
+)
+
+@Entity(primaryKeys = ["sessionExerciseId","sessionId"])
+data class SessionExerciseSessionCrossRef(
+    val sessionExerciseId: Long,
+    val sessionId: Long
+)
+
+
 
 /**
  * SessionExercise is an exercise in a session. The exercise it's connected to is embedded
@@ -55,8 +83,9 @@ data class SessionExercise(
     @PrimaryKey(autoGenerate = true) var sessionExerciseId: Long = 0,
 
     val sessionExerciseText: String = "cock",
-    val parentSessionId: Long,
-    val parentExerciseId: Long,
-    @Embedded val exercise: Exercise
 
-    )
+    val parentSessionId: Long,
+    val parentExerciseId: Long
+
+)
+
