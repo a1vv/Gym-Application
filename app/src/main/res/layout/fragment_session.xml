@@ -44,17 +44,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/sessionExerciseTest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
-            app:sessionExerciseTest="@{sessionViewModel.sessionExercise}"
-            tools:text="16/15-62" />
-
         <Button
             android:id="@+id/addExercise"
             android:layout_width="wrap_content"

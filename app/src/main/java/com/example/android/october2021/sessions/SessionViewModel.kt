@@ -13,17 +13,18 @@ class SessionViewModel(
     private var sessionId: Long
 ) : AndroidViewModel(application) {
 
+    // vital
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val activeSessionId = MutableLiveData<Long>()
-
-    val session = MutableLiveData<Session?>()
-    val textInput = MutableLiveData<String>()
-
-    val exercises = MutableLiveData<List<Exercise>>()
+    private val sessionWithSessionExercises = MutableLiveData<SessionWithSessionExercises>()
+    val session = MutableLiveData<Session>() // holds info about the Session
     val sessionExerciseList = MutableLiveData<List<SessionExerciseWithExercise>>()
-    val sessionExercise = MutableLiveData<SessionExerciseWithExercise?>()
 
+
+    // useless?
+    val exercises = MutableLiveData<List<Exercise>>()
+    val textInput = MutableLiveData<String>()
 
     private val _navigateToHome = MutableLiveData<Long>()
     val navigateToHome
@@ -31,27 +32,28 @@ class SessionViewModel(
 
 
     init {
+        Log.d("SWM", "Argument Session ID is $sessionId")
+        activeSessionId.value = sessionId
         initializeSession()
     }
 
     private fun initializeSession() {
-        Log.d("SWM", "Argument Session ID is $sessionId")
-        activeSessionId.value = sessionId
         uiScope.launch {
+            // Create new Session if none was submitted
             if (sessionId < 0) {
                 activeSessionId.value = addNewSession().sessionId
             }
-            session.value = getSessionInfoFromDatabase()
-            updateSessionWorkouts()
+
+            // Get SessionWithSessionExercise from database using activeSessionId
+            sessionWithSessionExercises.value = withContext(Dispatchers.IO){
+                database.getSessionWithSessionExercises(activeSessionId.value!!)
+            }
+            // extract session info and list of SessionExercises from SessionWithSessionExercise
+            session.value = withContext(Dispatchers.IO){ sessionWithSessionExercises.value!!.session }
+            sessionExerciseList.value = withContext(Dispatchers.IO){sessionWithSessionExercises.value!!.sessionExercises }
+            updateSessionExerciseList()
 
         }
-        prepareSpinner()
-    }
-
-    private fun prepareSpinner() {
-        exercises.value = database.getAllExercises().value
-        //TODO MAKES NO SENSE, EXERCISES.VALUE GETS SET TO NULL????
-        Log.d("SWM", "spinner prepared ${exercises.value}")
     }
 
     private suspend fun addNewSession(): Session {
@@ -73,13 +75,6 @@ class SessionViewModel(
         _navigateToHome.value = 1
     }
 
-    private suspend fun getSessionInfoFromDatabase(): Session? {
-        return withContext(Dispatchers.IO) {
-            val session = database.getSession(activeSessionId.value!!)
-            session
-        }
-    }
-
     private suspend fun changeSessionEndTime() {
         withContext(Dispatchers.IO) {
             val session = database.getSession(activeSessionId.value!!)
@@ -94,24 +89,35 @@ class SessionViewModel(
 
     fun onAddExerciseClicked() {
         uiScope.launch {
-            prepareSpinner()
             addExerciseToSession()
-            updateSessionWorkouts()
+            updateSessionExerciseList()
             textInput.value = ""
         }
     }
 
-    private suspend fun updateSessionWorkouts() {
+    private suspend fun updateSessionExerciseList() {
+        // TODO: update Session Workouts function
+
         sessionExerciseList.value = withContext(Dispatchers.IO) {
-            database.getSessionWithSessionExercises(activeSessionId.value!!)
+            database.getSessionWithSessionExercises(activeSessionId.value!!).sessionExercises
         }
+
+        Log.d("SVM","exercise list updated")
     }
 
     private suspend fun addExerciseToSession() {
         withContext(Dispatchers.IO) {
-            // TODO: implement functionality to associate  a workout with a session
-
+            // TODO: implement functionality to associate a workout with a session
+            database.insertSessionExercise(
+                SessionExercise(
+                    0,
+                    "Test",
+                    activeSessionId.value!!,
+                    database.getLastExercise()!!.exerciseId
+                )
+            )
         }
+        Log.d("SVM","SessionExercise added to session")
     }
 
     fun onHomeNavigated() {

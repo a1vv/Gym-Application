@@ -22,7 +22,7 @@ data class Session(
 )
 
 /**
- * Every exercise can be connected to multiple SessionExercises (one-many relation)
+ * Every exercise can have multiple parent SessionExercises (one-many relation)
  * This data class exists to get a list of all SessionExercises connected to an exercise
  */
 data class ExerciseWithSessionExercises(
@@ -64,13 +64,13 @@ data class SessionExerciseWithExercise(
 @Entity(primaryKeys = ["sessionExerciseId","exerciseId"])
 data class SessionExerciseExerciseCrossRef(
     val sessionExerciseId: Long,
-    val exerciseId: Long
+    @ColumnInfo(index = true) val exerciseId: Long
 )
 
 @Entity(primaryKeys = ["sessionExerciseId","sessionId"])
 data class SessionExerciseSessionCrossRef(
     val sessionExerciseId: Long,
-    val sessionId: Long
+    @ColumnInfo(index = true) val sessionId: Long
 )
 
 

@@ -25,7 +25,8 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val animation = TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+        val animation =
+            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = animation
         sharedElementReturnTransition = animation
 
@@ -43,16 +44,23 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         val sessionId = SessionFragmentArgs.fromBundle(requireArguments()).sessionId
 
         // instantiate sessionViewModel via viewModelFactory, pass it to xml via binding.
-        val viewModelFactory = SessionViewModel.SessionViewModelFactory(GymRepository(GymDatabase.getInstance(application)),application,sessionId)
+        val viewModelFactory = SessionViewModel.SessionViewModelFactory(
+            GymRepository(GymDatabase.getInstance(application)), application, sessionId
+        )
         val sessionViewModel = ViewModelProvider(
-            this, viewModelFactory).get(SessionViewModel::class.java)
+            this, viewModelFactory
+        ).get(SessionViewModel::class.java)
+
         binding.sessionViewModel = sessionViewModel
         binding.lifecycleOwner = this
 
-        sessionViewModel.navigateToHome.observe(viewLifecycleOwner,{
+        sessionViewModel.navigateToHome.observe(viewLifecycleOwner, {
             val extras = FragmentNavigatorExtras(binding.fab to "fab")
-            it?.let{
-                this.findNavController().navigate(SessionFragmentDirections.actionSessionFragmentToHomeFragment(),extras)
+            it?.let {
+                this.findNavController().navigate(
+                    SessionFragmentDirections.actionSessionFragmentToHomeFragment(),
+                    extras
+                )
                 sessionViewModel.onHomeNavigated()
             }
         })
@@ -61,9 +69,10 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         layoutManager.orientation = LinearLayoutManager.VERTICAL
 
 
-        val adapter = SessionExerciseAdapter(SessionExerciseWithExerciseListener { sessionExerciseId ->
-            sessionViewModel.onSessionExerciseClicked(sessionExerciseId)
-        })
+        val adapter =
+            SessionExerciseAdapter(SessionExerciseWithExerciseListener { sessionExerciseId ->
+                sessionViewModel.onSessionExerciseClicked(sessionExerciseId)
+            })
 
         binding.exercisesList.adapter = adapter
         binding.exercisesList.layoutManager = layoutManager

@@ -20,7 +20,7 @@ import com.example.android.october2021.db.entities.*
     SessionExerciseExerciseCrossRef::class,
     SessionExerciseSessionCrossRef::class
     ],
-    version = 19, exportSchema = false)
+    version = 20, exportSchema = false)
 abstract class GymDatabase : RoomDatabase() {
 
     /**

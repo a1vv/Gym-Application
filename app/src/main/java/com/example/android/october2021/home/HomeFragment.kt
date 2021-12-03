@@ -23,7 +23,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         savedInstanceState: Bundle?
     ): View? {
 
-        val animation = TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+        val animation =
+            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = animation
         sharedElementReturnTransition = animation
 
@@ -36,19 +37,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val binding = FragmentHomeBinding.bind(view)
         val application = requireNotNull(this.activity).application
         val sessionSource = GymDatabase.getInstance(application).gymDatabaseDAO
-        val viewModelFactory = HomeViewModelFactory(sessionSource,application)
+        val viewModelFactory = HomeViewModelFactory(sessionSource, application)
         val homeViewModel = ViewModelProvider(
-            this, viewModelFactory).get(HomeViewModel::class.java)
+            this, viewModelFactory
+        ).get(HomeViewModel::class.java)
 
         binding.homeViewModel = homeViewModel
         binding.lifecycleOwner = this
 
-        binding.bottomAppBar.setOnMenuItemClickListener{menuItem->
-            when(menuItem.itemId){
+        binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
                 R.id.search -> {
                     true
                 }
-                R.id.workouts ->{
+                R.id.workouts -> {
                     homeViewModel.onWorkoutsClicked()
                     true
                 }
@@ -70,28 +72,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.sessionList.layoutManager = layoutManager
 
         // observe sessions database and submit to adapter to keep recyclerview updated.
-        homeViewModel.sessions.observe(viewLifecycleOwner, Observer {
+        homeViewModel.sessions.observe(viewLifecycleOwner, {
             it?.let {
                 adapter.submitList(it)
-                Log.d("WF","observed change in workouts")
+                Log.d("WF", "observed change in workouts")
             }
         })
 
-        homeViewModel.navigateToSession.observe(viewLifecycleOwner,{ session ->
+        homeViewModel.navigateToSession.observe(viewLifecycleOwner, { session ->
             val extras = FragmentNavigatorExtras(binding.fab to "fab")
             session?.let {
                 this.findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToSessionFragment(
-                        session
-                    ),extras)
+                    HomeFragmentDirections.actionHomeFragmentToSessionFragment(session),
+                    extras
+                )
                 homeViewModel.onSessionNavigated()
             }
         })
 
-        homeViewModel.navigateToWorkouts.observe(viewLifecycleOwner,{
-            Log.d("HF","Observed change in navigateToWorkouts")
-            if(it > 0 ) it.let {
-                this.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToWorkoutsFragment())
+        homeViewModel.navigateToWorkouts.observe(viewLifecycleOwner, {
+            Log.d("HF", "Observed change in navigateToWorkouts")
+            if (it > 0) it.let {
+                this.findNavController()
+                    .navigate(HomeFragmentDirections.actionHomeFragmentToWorkoutsFragment())
                 homeViewModel.onWorkoutsNavigated()
             }
         })
