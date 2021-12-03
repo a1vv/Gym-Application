@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.october2021.R
 import com.example.android.october2021.databinding.FragmentExercisesBinding
 import com.example.android.october2021.db.GymDatabase
+import com.example.android.october2021.db.GymRepository
 
 class ExercisesFragment : Fragment(R.layout.fragment_exercises) {
 
@@ -19,7 +20,7 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises) {
         val binding = FragmentExercisesBinding.bind(view)
 
         val application = requireNotNull(this.activity).application
-        val dataSource = GymDatabase.getInstance(application).gymDatabaseDAO
+        val dataSource = GymRepository(GymDatabase.getInstance(application))
         val viewModelFactory = WorkoutsViewModelFactory(dataSource, application)
         val exercisesViewModel = ViewModelProvider(
             this, viewModelFactory).get(ExercisesViewModel::class.java)
@@ -33,7 +34,7 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises) {
         binding.exercisesList.adapter = adapter
         binding.exercisesList.layoutManager = layoutManager
 
-        exercisesViewModel.exercises.observe(viewLifecycleOwner, Observer {
+        exercisesViewModel.exercises.observe(viewLifecycleOwner, {
             it?.let {
                 adapter.submitList(it)
                 Log.d("WF","observed change in workouts")
