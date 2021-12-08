@@ -17,6 +17,9 @@ class GymRepository(
     fun getAllExercises() =
         db.gymDatabaseDAO.getAllExercises()
 
+    fun getSessionExercises(sessionId: Long) =
+        db.gymDatabaseDAO.getSessionExercisesWithExercise(sessionId)
+
     suspend fun insertExercise(exercise: Exercise) =
         db.gymDatabaseDAO.insertExercise(exercise)
 

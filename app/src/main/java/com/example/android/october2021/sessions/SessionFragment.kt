@@ -19,7 +19,7 @@ import com.example.android.october2021.databinding.FragmentSessionImprovedBindin
 import com.example.android.october2021.db.GymDatabase
 import com.example.android.october2021.db.GymRepository
 import com.example.android.october2021.sessionexercises.SessionExerciseAdapter
-import com.example.android.october2021.sessionexercises.SessionExerciseWithExerciseListener
+import com.example.android.october2021.sessionexercises.SessionExerciseListener
 
 class SessionFragment : Fragment(R.layout.fragment_session_improved) {
 
@@ -72,9 +72,9 @@ class SessionFragment : Fragment(R.layout.fragment_session_improved) {
 
         // create adapter for sessionExercises
         val adapter =
-            SessionExerciseAdapter(SessionExerciseWithExerciseListener { sessionExerciseId ->
-                sessionViewModel.onSessionExerciseClicked(sessionExerciseId)
-            })
+            // SessionExerciseWithExerciseAdapter(SessionExerciseWithExerciseListener { sessionExerciseId -> sessionViewModel.onSessionExerciseClicked(sessionExerciseId) })
+            SessionExerciseAdapter(SessionExerciseListener { sessionExerciseId ->  sessionViewModel.onSessionExerciseClicked(sessionExerciseId)})
+
         // bind adapter and layoutManager to exercisesList
         binding.exercisesList.adapter = adapter
         binding.exercisesList.layoutManager = layoutManager

@@ -19,14 +19,14 @@
 
         <variable
             name="clickListener"
-            type="com.example.android.october2021.sessionexercises.SessionExerciseWithExerciseListener" />
+            type="com.example.android.october2021.sessionexercises.SessionExerciseListener" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:onClick="@{() -> clickListener.onClick(sessionExerciseWithExercise)}"
+        android:onClick="@{() -> clickListener.onClick(sessionExercise)}"
         app:cardCornerRadius="2dp"
         app:cardElevation="8dp"
         app:cardPreventCornerOverlap="true"
@@ -43,7 +43,7 @@
                 tools:text="test 1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:sessionExerciseTest="@{sessionExerciseWithExercise}" />
+                app:sessionExerciseTest="@{sessionExercise}" />
 
             <TextView
                 android:id="@+id/tv2"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv1"
-                app:sessionExerciseInfo="@{sessionExerciseWithExercise}"
+                app:sessionExerciseInfo="@{sessionExercise}"
                 tools:text="test 2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

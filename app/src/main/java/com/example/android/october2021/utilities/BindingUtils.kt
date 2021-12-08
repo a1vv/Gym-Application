@@ -2,10 +2,9 @@ package com.example.android.october2021.utilities
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.example.android.october2021.db.entities.Session
 import com.example.android.october2021.db.entities.Exercise
+import com.example.android.october2021.db.entities.Session
 import com.example.android.october2021.db.entities.SessionExercise
-import com.example.android.october2021.db.entities.SessionExerciseWithExercise
 
 @BindingAdapter("exerciseTitle")
 fun TextView.setExerciseTitle(item: Exercise){
@@ -22,25 +21,26 @@ fun TextView.setExerciseId(item: Exercise){
 fun TextView.setSessionInfo(item: Session?){
     if (item != null) {
         val time = (item.endTimeMilli - item.startTimeMilli)/1000
-        "[${item.sessionId}] ${time/60} minutes and $time seconds. ".also { text = it }
+        //"[${item.sessionId}] ${time/60} minutes and $time seconds. ".also { text = it }
+        text = "bajks"
     }
 }
 
 @BindingAdapter("sessionExerciseTest")
-fun TextView.setSessionExerciseTest(item: SessionExerciseWithExercise?){
+fun TextView.setSessionExerciseTest(item: SessionExercise?){
     if (item != null) {
-        if(item.exercise != null) {
-            text = "JA?"
-        } else {
-            text = "nej."
-        }
+        text = item.sessionExerciseText
+    } else {
+        text = "SNOPP"
     }
 }
 
 @BindingAdapter("sessionExerciseInfo")
-fun TextView.setSessionExerciseInfo(item: SessionExerciseWithExercise?){
+fun TextView.setSessionExerciseInfo(item: SessionExercise?){
     if (item != null) {
-        text = item.sessionExercise.sessionExerciseText
+        text = item.sessionExerciseId.toString()
+    } else {
+        text = "SNOPP"
     }
 }
 

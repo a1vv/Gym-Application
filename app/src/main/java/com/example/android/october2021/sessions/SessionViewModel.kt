@@ -2,9 +2,14 @@ package com.example.android.october2021.sessions
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.android.october2021.db.GymRepository
-import com.example.android.october2021.db.entities.*
+import com.example.android.october2021.db.entities.Exercise
+import com.example.android.october2021.db.entities.Session
+import com.example.android.october2021.db.entities.SessionExercise
 import kotlinx.coroutines.*
 
 class SessionViewModel(
@@ -17,9 +22,8 @@ class SessionViewModel(
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val activeSessionId = MutableLiveData<Long>()
-    private val sessionWithSessionExercises = MutableLiveData<SessionWithSessionExercises>()
     val session = MutableLiveData<Session>() // holds info about the Session
-    val sessionExerciseList = MutableLiveData<List<SessionExerciseWithExercise>>()
+    val sessionExerciseList = MutableLiveData<List<SessionExercise>>()
 
 
     // useless?
@@ -32,7 +36,7 @@ class SessionViewModel(
 
 
     init {
-        Log.d("SWM", "Argument Session ID is $sessionId")
+        Log.d("SVM", "Argument Session ID is $sessionId")
         activeSessionId.value = sessionId
         initializeSession()
     }
@@ -44,16 +48,16 @@ class SessionViewModel(
                 activeSessionId.value = addNewSession().sessionId
             }
 
-            // Get SessionWithSessionExercise from database using activeSessionId
-            sessionWithSessionExercises.value = withContext(Dispatchers.IO){
-                database.getSessionWithSessionExercises(activeSessionId.value!!)
-            }
             // extract session info and list of SessionExercises from SessionWithSessionExercise
-            session.value = withContext(Dispatchers.IO){ sessionWithSessionExercises.value!!.session }
-            sessionExerciseList.value = withContext(Dispatchers.IO){sessionWithSessionExercises.value!!.sessionExercises }
+            session.value = withContext(Dispatchers.IO){ database.getSession(activeSessionId.value!!)}
+            sessionExerciseList.value = withContext(Dispatchers.IO){ database.getSessionExercises( activeSessionId.value!!) }
+
+
+            Log.d("SVM", sessionExerciseList.value.toString())
+            Log.d("SVM", session.value.toString())
+
             updateSessionExerciseList()
 
-            Log.d("SVM", sessionWithSessionExercises.value.toString())
 
         }
     }
@@ -84,7 +88,7 @@ class SessionViewModel(
             if (currentSession!! == session) {
                 session.endTimeMilli = System.currentTimeMillis()
                 database.updateSession(session)
-                Log.d("SWM", "session end time set")
+                Log.d("SVM", "session end time set")
             }
         }
     }
@@ -99,7 +103,7 @@ class SessionViewModel(
 
     private suspend fun updateSessionExerciseList() {
         sessionExerciseList.value = withContext(Dispatchers.IO) {
-            database.getSessionWithSessionExercises(activeSessionId.value!!).sessionExercises
+            database.getSessionExercises( activeSessionId.value!!)
         }
         Log.d("SVM","exercise list updated")
     }
