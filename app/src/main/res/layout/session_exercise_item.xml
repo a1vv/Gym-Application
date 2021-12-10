@@ -25,22 +25,19 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:onClick="@{() -> clickListener.onClick(sessionExerciseWithExercise)}"
-        app:cardCornerRadius="2dp"
-        app:cardElevation="8dp"
-        app:cardPreventCornerOverlap="true"
-        app:contentPadding="8dp">
+        style="@style/CustomCardView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv1"
                 tools:text="test 1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:sessionExerciseTest="@{sessionExerciseWithExercise}" />
@@ -51,6 +48,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 app:sessionExerciseInfo="@{sessionExerciseWithExercise}"
                 tools:text="test 2" />
 
