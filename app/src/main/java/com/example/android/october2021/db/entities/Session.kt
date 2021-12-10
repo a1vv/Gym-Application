@@ -22,68 +22,42 @@ data class Session(
     )
 
 /**
- * Every exercise can have multiple parent SessionExercises (one-many relation)
- * This data class exists to get a list of all SessionExercises connected to an exercise
+ * SessionExercise is an exercise in a session, foreign keys are the ID:s of Exercise and Session.
+ * Many to one relation since every Session/Exercise can reference multiple SessionExercises
  */
-data class ExerciseWithSessionExercises(
-    @Embedded val exercise: Exercise,
-    @Relation(
-        parentColumn = "exerciseId",
-        entityColumn = "parentExerciseId"
-    )
-    val sessionExercises: List<SessionExercise>
+
+@Entity(
+    tableName = "sessionExercises",
+    foreignKeys = [
+        ForeignKey(
+            entity = Exercise::class,
+            parentColumns = arrayOf("exerciseId"),
+            childColumns = arrayOf("parentExerciseId")
+        ),
+        ForeignKey(
+            entity = Session::class,
+            parentColumns = arrayOf("sessionId"),
+            childColumns = arrayOf("parentSessionId")
+        )]
 )
-
-/**
- * Every Session has multiple SessionExercises connected to it (one-many relation)
- * This data class allows you to get a list of all SessionExercises belonging to a Session.
- */
-data class SessionWithSessionExercises(
-    @Embedded val session: Session,
-    @Relation(
-        parentColumn = "sessionId",
-        entity = SessionExercise::class,
-        entityColumn = "sessionExerciseId",
-        associateBy = Junction(SessionExerciseSessionCrossRef::class)
-    )
-    val sessionExercises: List<SessionExerciseWithExercise>
-)
-
-data class SessionExerciseWithExercise(
-    @Embedded val sessionExercise: SessionExercise,
-    @Relation(
-        parentColumn = "sessionExerciseId",
-        entity = Exercise::class,
-        entityColumn = "exerciseId",
-        associateBy = Junction(SessionExerciseExerciseCrossRef::class)
-    )
-    val exercise: Exercise
-
-)
-
-@Entity(primaryKeys = ["sessionExerciseId", "exerciseId"])
-data class SessionExerciseExerciseCrossRef(
-    val sessionExerciseId: Long,
-    @ColumnInfo(index = true) val exerciseId: Long
-)
-
-@Entity(primaryKeys = ["sessionExerciseId", "sessionId"])
-data class SessionExerciseSessionCrossRef(
-    val sessionExerciseId: Long,
-    @ColumnInfo(index = true) val sessionId: Long
-)
-
-/**
- * SessionExercise is an exercise in a session. The exercise it's connected to is embedded
- */
-@Entity(tableName = "sessionExercises")
 data class SessionExercise(
     @PrimaryKey(autoGenerate = true) var sessionExerciseId: Long = 0,
 
     val sessionExerciseText: String = "cock",
 
     @ColumnInfo(index = true) val parentSessionId: Long,
-    @ColumnInfo(index = true) val parentExerciseId: Long
-
+    @ColumnInfo(index = true)
+    val parentExerciseId: Long
 )
+
+/**
+ * Holds a sessionExercise and it's associated exercise. Embedded = bad? it works though.
+ */
+data class SessionExerciseWithExercise(
+    @Embedded
+    val sessionExercise: SessionExercise,
+    @Embedded
+    val exercise: Exercise
+)
+
 

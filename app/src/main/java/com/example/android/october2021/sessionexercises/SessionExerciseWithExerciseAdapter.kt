@@ -34,7 +34,7 @@ class SessionExerciseWithExerciseAdapter(private val clickListener: SessionExerc
         ) {
             binding.sessionExerciseWithExercise = item
             binding.sessionExercise = item.sessionExercise
-            //binding.clickListener = clickListener
+            binding.clickListener = clickListener
             binding.executePendingBindings()
         }
 

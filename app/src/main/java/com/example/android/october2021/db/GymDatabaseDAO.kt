@@ -46,19 +46,20 @@ interface GymDatabaseDAO {
     @Query("SELECT * from sessions WHERE sessionId = :key")
     fun getSessionWithId(key: Long): Session?
 
+
+    @Query("SELECT * from sessionExercises WHERE sessionExerciseId = :key")
+    fun getSessionExerciseWithId(key: Long): SessionExercise?
+
     @Query("SELECT * from exercises WHERE exerciseId = :key")
     fun getExerciseWithId(key: Long): Exercise?
 
+    @Transaction
     @Query("SELECT * FROM sessionExercises WHERE parentSessionId = :key")
     fun getSessionExercisesWithExercise(key: Long) : List<SessionExercise>
 
     @Transaction
-    @Query("SELECT * FROM sessions WHERE sessionId = :key")
-    fun getSessionWithSessionExercises(key: Long) : SessionWithSessionExercises
-
-    @Transaction
-    @Query("SELECT * FROM exercises")
-    fun getExerciseAndSessionExercises(): List<ExerciseWithSessionExercises>
+    @Query("SELECT * FROM sessionExercises JOIN exercises ON sessionExercises.parentExerciseId = exercises.exerciseId WHERE parentSessionId = :key")
+    fun getTheFuckersNow(key: Long) : List<SessionExerciseWithExercise>
 
 }
 

@@ -8,9 +8,6 @@ class GymRepository(
     private val db: GymDatabase
 ) {
 
-    fun getSessionWithSessionExercises(sessionId: Long) =
-        db.gymDatabaseDAO.getSessionWithSessionExercises(sessionId)
-
     fun getSession(id: Long) =
         db.gymDatabaseDAO.getSessionWithId(id)
 
@@ -18,7 +15,7 @@ class GymRepository(
         db.gymDatabaseDAO.getAllExercises()
 
     fun getSessionExercises(sessionId: Long) =
-        db.gymDatabaseDAO.getSessionExercisesWithExercise(sessionId)
+        db.gymDatabaseDAO.getTheFuckersNow(sessionId)
 
     suspend fun insertExercise(exercise: Exercise) =
         db.gymDatabaseDAO.insertExercise(exercise)

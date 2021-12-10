@@ -33,7 +33,7 @@ class SessionExerciseAdapter(private val clickListener: SessionExerciseListener)
             clickListener: SessionExerciseListener
         ) {
             binding.sessionExercise = item
-            binding.clickListener = clickListener
+            //binding.clickListener = clickListener
             binding.executePendingBindings()
         }
 

@@ -10,6 +10,7 @@ import com.example.android.october2021.db.GymRepository
 import com.example.android.october2021.db.entities.Exercise
 import com.example.android.october2021.db.entities.Session
 import com.example.android.october2021.db.entities.SessionExercise
+import com.example.android.october2021.db.entities.SessionExerciseWithExercise
 import kotlinx.coroutines.*
 
 class SessionViewModel(
@@ -23,7 +24,7 @@ class SessionViewModel(
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val activeSessionId = MutableLiveData<Long>()
     val session = MutableLiveData<Session>() // holds info about the Session
-    val sessionExerciseList = MutableLiveData<List<SessionExercise>>()
+    val sessionExerciseList = MutableLiveData<List<SessionExerciseWithExercise>>()
 
 
     // useless?
@@ -50,7 +51,7 @@ class SessionViewModel(
 
             // extract session info and list of SessionExercises from SessionWithSessionExercise
             session.value = withContext(Dispatchers.IO){ database.getSession(activeSessionId.value!!)}
-            sessionExerciseList.value = withContext(Dispatchers.IO){ database.getSessionExercises( activeSessionId.value!!) }
+            sessionExerciseList.value = withContext(Dispatchers.IO){ database.getSessionExercises(activeSessionId.value!!) }
 
 
             Log.d("SVM", sessionExerciseList.value.toString())
