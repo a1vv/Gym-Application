@@ -69,6 +69,7 @@ class SessionViewModel(
             uiScope.launch {
                 Log.d("SVM", "eID: $exerciseId, sID: $sessionId")
                 addExerciseToSession(exerciseId)
+                updateSessionExerciseList()
             }
         }
     }

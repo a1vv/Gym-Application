@@ -34,13 +34,6 @@ class ExercisePickerViewModel(
     }
 
 
-
-    // when exercise is picked, navigate back to session
-    fun onExercisePicked(sessionId: Long, exerciseId: Long) {
-        _chosenExerciseId.value = exerciseId
-        _navigateToSession.value = sessionId
-    }
-
     fun onSessionNavigated(){
         _navigateToSession.value = -1
     }
