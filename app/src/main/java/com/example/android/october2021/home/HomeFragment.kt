@@ -3,16 +3,17 @@ package com.example.android.october2021.home
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.android.october2021.*
-import com.example.android.october2021.db.GymDatabase
+import com.example.android.october2021.R
 import com.example.android.october2021.databinding.FragmentHomeBinding
+import com.example.android.october2021.db.GymDatabase
 import com.example.android.october2021.sessions.SessionAdapter
 import com.example.android.october2021.sessions.SessionListener
 
@@ -51,7 +52,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     true
                 }
                 R.id.workouts -> {
-                    homeViewModel.onWorkoutsClicked()
+                    homeViewModel.onExercisesClicked()
                     true
                 }
                 R.id.clearSessions -> {
@@ -90,12 +91,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         })
 
-        homeViewModel.navigateToWorkouts.observe(viewLifecycleOwner, {
+        homeViewModel.navigateToExercises.observe(viewLifecycleOwner, {
             Log.d("HF", "Observed change in navigateToWorkouts")
             if (it > 0) it.let {
                 this.findNavController()
                     .navigate(HomeFragmentDirections.actionHomeFragmentToWorkoutsFragment())
-                homeViewModel.onWorkoutsNavigated()
+                homeViewModel.onExercisesNavigated()
             }
         })
     }

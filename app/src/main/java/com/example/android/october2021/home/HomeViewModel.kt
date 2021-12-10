@@ -1,7 +1,10 @@
 package com.example.android.october2021.home
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.android.october2021.db.GymDatabaseDAO
 import kotlinx.coroutines.*
 
@@ -13,9 +16,9 @@ class HomeViewModel(val database: GymDatabaseDAO, application: Application) : An
     //val navigateToWorkouts = MutableLiveData<Boolean>()
     val sessions = database.getAllSessions()
 
-    private val _navigateToWorkouts = MutableLiveData<Long>()
-    val navigateToWorkouts
-        get() = _navigateToWorkouts
+    private val _navigateToExercises = MutableLiveData<Long>()
+    val navigateToExercises
+        get() = _navigateToExercises
 
     private val _navigateToSession = MutableLiveData<Long>()
     val navigateToSession
@@ -29,16 +32,16 @@ class HomeViewModel(val database: GymDatabaseDAO, application: Application) : An
         viewModelJob.cancel()
     }
 
-    fun onWorkoutsClicked() {
-        navigateToWorkouts.value = 1
+    fun onExercisesClicked() {
+        navigateToExercises.value = 1
     }
 
     fun onSessionClicked(sessionId: Long) {
         _navigateToSession.value = sessionId
     }
 
-    fun onWorkoutsNavigated() {
-        navigateToWorkouts.value = -1
+    fun onExercisesNavigated() {
+        navigateToExercises.value = -1
     }
     fun onSessionNavigated(){
         _navigateToSession.value = null

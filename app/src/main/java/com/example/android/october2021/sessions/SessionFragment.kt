@@ -9,21 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.android.october2021.R
-import com.example.android.october2021.databinding.FragmentSessionImprovedBinding
+import com.example.android.october2021.databinding.FragmentSessionBinding
 import com.example.android.october2021.db.GymDatabase
 import com.example.android.october2021.db.GymRepository
-import com.example.android.october2021.sessionexercises.SessionExerciseAdapter
-import com.example.android.october2021.sessionexercises.SessionExerciseListener
 import com.example.android.october2021.sessionexercises.SessionExerciseWithExerciseAdapter
 import com.example.android.october2021.sessionexercises.SessionExerciseWithExerciseListener
 
-class SessionFragment : Fragment(R.layout.fragment_session_improved) {
+class SessionFragment : Fragment(R.layout.fragment_session) {
 
     private lateinit var viewPager: ViewPager2
 
@@ -33,40 +30,32 @@ class SessionFragment : Fragment(R.layout.fragment_session_improved) {
     ): View? {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_session_improved, container, false)
+        return inflater.inflate(R.layout.fragment_session, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentSessionImprovedBinding.bind(view)
+        val binding = FragmentSessionBinding.bind(view)
         val application = requireNotNull(this.activity).application
 
         // get sessionId from arguments
-        val sessionId = SessionFragmentArgs.fromBundle(requireArguments()).sessionId
+        val argSessionId = SessionFragmentArgs.fromBundle(requireArguments()).sessionId
+        val argExerciseId = SessionFragmentArgs.fromBundle(requireArguments()).exerciseId
 
         // instantiate sessionViewModel via viewModelFactory, pass it to xml via binding.
         val viewModelFactory = SessionViewModel.SessionViewModelFactory(
-            GymRepository(GymDatabase.getInstance(application)), application, sessionId
+            GymRepository(GymDatabase.getInstance(application)), application, argSessionId
         )
-        val sessionViewModel = ViewModelProvider(
+        val viewModel = ViewModelProvider(
             this, viewModelFactory
         ).get(SessionViewModel::class.java)
 
-        binding.sessionViewModel = sessionViewModel
+        binding.sessionViewModel = viewModel
         binding.lifecycleOwner = this
 
+        // send exerciseId to viewModel
+        viewModel.onExerciseAdded(argExerciseId)
 
-        // add navigation back to home TODO: remove?
-        sessionViewModel.navigateToHome.observe(viewLifecycleOwner, {
-            val extras = FragmentNavigatorExtras(binding.fab to "fab")
-            it?.let {
-                this.findNavController().navigate(
-                    SessionFragmentDirections.actionSessionFragmentToHomeFragment(),
-                    extras
-                )
-                sessionViewModel.onHomeNavigated()
-            }
-        })
 
         // create layoutManager for sessionExercises
         val layoutManager = LinearLayoutManager(context)
@@ -74,18 +63,29 @@ class SessionFragment : Fragment(R.layout.fragment_session_improved) {
 
         // create adapter for sessionExercises
         val adapter =
-            SessionExerciseWithExerciseAdapter(SessionExerciseWithExerciseListener { sessionExerciseId -> sessionViewModel.onSessionExerciseClicked(sessionExerciseId) })
-            // SessionExerciseAdapter(SessionExerciseListener { sessionExerciseId ->  sessionViewModel.onSessionExerciseClicked(sessionExerciseId)})
+            SessionExerciseWithExerciseAdapter(SessionExerciseWithExerciseListener { sessionExerciseId ->
+                viewModel.onSessionExerciseClicked(
+                    sessionExerciseId
+                )
+            })
 
         // bind adapter and layoutManager to exercisesList
         binding.exercisesList.adapter = adapter
         binding.exercisesList.layoutManager = layoutManager
 
         // submit a new list to viewModel every time it gets updated
-        sessionViewModel.sessionExerciseList.observe(viewLifecycleOwner, {
+        viewModel.sessionExerciseList.observe(viewLifecycleOwner, {
             Log.d("SF", "SessionExerciseList updated")
             it?.let {
                 adapter.submitList(it)
+            }
+        })
+
+        viewModel.navigateToExercisePicker.observe(viewLifecycleOwner, {
+            it?.let { sessionId->
+                this.findNavController().navigate(
+                    SessionFragmentDirections.actionSessionFragmentToExercisePickerFragment(sessionId))
+                viewModel.onExercisePickerNavigated()
             }
         })
 
@@ -99,7 +99,11 @@ class SessionFragment : Fragment(R.layout.fragment_session_improved) {
         // implement viewpager to scroll between different session-information
         viewPager = binding.viewPager
         viewPager.adapter =
-            ScreenSlidePagerAdapter(fragmentList, requireActivity().supportFragmentManager, lifecycle)
+            ScreenSlidePagerAdapter(
+                fragmentList,
+                requireActivity().supportFragmentManager,
+                lifecycle
+            )
 
     }
 

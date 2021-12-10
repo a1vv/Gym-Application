@@ -8,11 +8,15 @@
             name="exercise"
             type="com.example.android.october2021.db.entities.Exercise" />
 
+        <variable
+            name="clickListener"
+            type="com.example.android.october2021.exercises.ExerciseListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> clickListener.onClick(exercise)}">
 
         <TextView
             android:id="@+id/exerciseIndex"

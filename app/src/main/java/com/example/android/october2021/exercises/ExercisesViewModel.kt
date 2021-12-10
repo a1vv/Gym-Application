@@ -3,7 +3,6 @@ package com.example.android.october2021.exercises
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.android.october2021.db.GymDatabaseDAO
 import com.example.android.october2021.db.GymRepository
 import com.example.android.october2021.db.entities.Exercise
 import kotlinx.coroutines.*
@@ -88,7 +87,7 @@ class ExercisesViewModel(
 
 }
 
-class WorkoutsViewModelFactory(
+class ExercisesViewModelFactory(
     private val dataSource: GymRepository,
     private val application: Application
 ) : ViewModelProvider.Factory {

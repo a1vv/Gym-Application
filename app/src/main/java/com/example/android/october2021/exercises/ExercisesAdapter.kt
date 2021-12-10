@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.october2021.db.entities.Exercise
 import com.example.android.october2021.databinding.ExerciseItemBinding
+import com.example.android.october2021.db.entities.Exercise
 
-class ExercisesAdapter: ListAdapter<Exercise, ExercisesAdapter.ExerciseHolder>(ExerciseDiffCallback()) {
+class ExercisesAdapter(val clickListener: ExerciseListener): ListAdapter<Exercise, ExercisesAdapter.ExerciseHolder>(ExerciseDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseHolder {
         return ExerciseHolder.from(parent)
@@ -16,13 +16,14 @@ class ExercisesAdapter: ListAdapter<Exercise, ExercisesAdapter.ExerciseHolder>(E
 
     override fun onBindViewHolder(holder: ExerciseHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item,clickListener)
     }
 
     class ExerciseHolder(private val binding: ExerciseItemBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Exercise){
+        fun bind(item: Exercise, clickListener: ExerciseListener){
             binding.exercise = item
+            binding.clickListener = clickListener
             binding.executePendingBindings()
         }
 
@@ -44,5 +45,8 @@ class ExercisesAdapter: ListAdapter<Exercise, ExercisesAdapter.ExerciseHolder>(E
             return oldItem.exerciseTitle == newItem.exerciseTitle
         }
     }
+}
 
+class ExerciseListener(val clickListener: (exerciseId: Long) -> Unit){
+    fun onClick(exercise: Exercise) = clickListener(exercise.exerciseId)
 }

@@ -2,13 +2,16 @@ package com.example.android.october2021.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.android.october2021.db.entities.*
+import com.example.android.october2021.db.entities.Exercise
+import com.example.android.october2021.db.entities.Session
+import com.example.android.october2021.db.entities.SessionExercise
+import com.example.android.october2021.db.entities.SessionExerciseWithExercise
 
 @Dao
 interface GymDatabaseDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertSession(session: Session)
+    suspend fun insertSession(session: Session) : Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertExercise(exercise: Exercise)

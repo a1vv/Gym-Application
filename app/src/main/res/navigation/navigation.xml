@@ -36,5 +36,25 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_sessionFragment_to_exercisePickerFragment"
+            app:destination="@id/exercisePickerFragment" />
+        <argument
+            android:name="exerciseId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+    <fragment
+        android:id="@+id/exercisePickerFragment"
+        android:name="com.example.android.october2021.exercises.ExercisePickerFragment"
+        android:label="ExercisePickerFragment" >
+        <action
+            android:id="@+id/action_exercisePickerFragment_to_sessionFragment"
+            app:destination="@id/sessionFragment"
+            app:popUpTo="@id/homeFragment" />
+        <argument
+            android:name="sessionId"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
 </navigation>

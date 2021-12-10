@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.october2021.db.GymRepository
-import com.example.android.october2021.db.entities.Exercise
 import com.example.android.october2021.db.entities.Session
 import com.example.android.october2021.db.entities.SessionExercise
 import com.example.android.october2021.db.entities.SessionExerciseWithExercise
@@ -19,54 +18,44 @@ class SessionViewModel(
     private var sessionId: Long
 ) : AndroidViewModel(application) {
 
-    // vital
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    private val activeSessionId = MutableLiveData<Long>()
-    val session = MutableLiveData<Session>() // holds info about the Session
+
+    val session = MutableLiveData<Session>() // holds info about the Session to be accessed by binding
     val sessionExerciseList = MutableLiveData<List<SessionExerciseWithExercise>>()
 
+    val exerciseId = MutableLiveData<Long>()
 
-    // useless?
-    val exercises = MutableLiveData<List<Exercise>>()
-    val textInput = MutableLiveData<String>()
-
-    private val _navigateToHome = MutableLiveData<Long>()
-    val navigateToHome
-        get() = _navigateToHome
+    private val _navigateToExercisePicker = MutableLiveData<Long>()
+    val navigateToExercisePicker
+        get() = _navigateToExercisePicker
 
 
     init {
         Log.d("SVM", "Argument Session ID is $sessionId")
-        activeSessionId.value = sessionId
+        // Create new Session if none was submitted
+        if (sessionId < 0) {
+            //  run blocking to ensure that a new sessionId gets set
+            runBlocking {
+                sessionId = addNewSession()
+            }
+            Log.d("SVM", "New sID: $sessionId")
+        }
         initializeSession()
     }
 
     private fun initializeSession() {
         uiScope.launch {
-            // Create new Session if none was submitted
-            if (sessionId < 0) {
-                activeSessionId.value = addNewSession().sessionId
-            }
-
-            // extract session info and list of SessionExercises from SessionWithSessionExercise
-            session.value = withContext(Dispatchers.IO){ database.getSession(activeSessionId.value!!)}
-            sessionExerciseList.value = withContext(Dispatchers.IO){ database.getSessionExercises(activeSessionId.value!!) }
-
-
-            Log.d("SVM", sessionExerciseList.value.toString())
-            Log.d("SVM", session.value.toString())
-
             updateSessionExerciseList()
-
-
         }
     }
 
-    private suspend fun addNewSession(): Session {
+    /**
+     * Adds a new session to database and returns its ID
+     */
+    private suspend fun addNewSession(): Long {
         return withContext(Dispatchers.IO) {
             database.insertSession(Session())
-            database.getLastSession()!!
         }
     }
 
@@ -75,60 +64,64 @@ class SessionViewModel(
         viewModelJob.cancel()
     }
 
-    fun onSubmitSession() {
-        uiScope.launch {
-            changeSessionEndTime()
-        }
-        _navigateToHome.value = 1
-    }
-
-    private suspend fun changeSessionEndTime() {
-        withContext(Dispatchers.IO) {
-            val session = database.getSession(activeSessionId.value!!)
-            val currentSession = database.getLastSession()
-            if (currentSession!! == session) {
-                session.endTimeMilli = System.currentTimeMillis()
-                database.updateSession(session)
-                Log.d("SVM", "session end time set")
+    fun onExerciseAdded(exerciseId: Long) {
+        if (exerciseId > -1) {
+            uiScope.launch {
+                Log.d("SVM", "eID: $exerciseId, sID: $sessionId")
+                addExerciseToSession(exerciseId)
             }
         }
     }
 
+    /**
+     * Starts the navigation to ExercisePickerFragment
+     */
     fun onAddExerciseClicked() {
         uiScope.launch {
-            addExerciseToSession()
+            navigateToExercisePicker.value = sessionId
             updateSessionExerciseList()
-            textInput.value = ""
         }
     }
 
+    /**
+     * Set variable back to null after navigation
+     */
+    fun onExercisePickerNavigated() {
+        _navigateToExercisePicker.value = null
+    }
+
+    /**
+     * Update the list of SessionExercises from the database
+     */
     private suspend fun updateSessionExerciseList() {
         sessionExerciseList.value = withContext(Dispatchers.IO) {
-            database.getSessionExercises( activeSessionId.value!!)
+            database.getSessionExercises(sessionId)
         }
-        Log.d("SVM","exercise list updated")
+        Log.d("SVM", "exercise list updated")
     }
 
-    private suspend fun addExerciseToSession() {
+    /**
+     * Create a new SessionExercise with the right sessionId and exerciseId
+     */
+    private suspend fun addExerciseToSession(exerciseId: Long) {
         withContext(Dispatchers.IO) {
+            Log.d("SVM", "SessionExercises created with sID: $sessionId, eID: $exerciseId")
             database.insertSessionExercise(
                 SessionExercise(
                     0,
                     "Test",
-                    activeSessionId.value!!,
-                    database.getLastExercise()!!.exerciseId
+                    sessionId,
+                    exerciseId
                 )
             )
         }
-        Log.d("SVM","SessionExercise added to session")
-
-        Log.d("SVM",sessionExerciseList.value.toString())
+        Log.d("SVM", "SessionExercise added to session")
+        Log.d("SVM", sessionExerciseList.value.toString())
     }
 
-    fun onHomeNavigated() {
-        _navigateToHome.value = null
-    }
-
+    /**
+     * Handle press-events on SessionExercise items
+     */
     fun onSessionExerciseClicked(sessionExerciseId: Long) {
         Log.d("SVM", sessionExerciseId.toString())
     }

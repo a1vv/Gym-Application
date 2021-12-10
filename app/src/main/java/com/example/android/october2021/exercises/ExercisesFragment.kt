@@ -2,9 +2,8 @@ package com.example.android.october2021.exercises
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.october2021.R
@@ -21,7 +20,7 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises) {
 
         val application = requireNotNull(this.activity).application
         val dataSource = GymRepository(GymDatabase.getInstance(application))
-        val viewModelFactory = WorkoutsViewModelFactory(dataSource, application)
+        val viewModelFactory = ExercisesViewModelFactory(dataSource, application)
         val exercisesViewModel = ViewModelProvider(
             this, viewModelFactory).get(ExercisesViewModel::class.java)
         binding.exercisesViewModel = exercisesViewModel
@@ -30,7 +29,7 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises) {
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
 
-        val adapter = ExercisesAdapter()
+        val adapter = ExercisesAdapter(ExerciseListener { Log.d("EF", "exercise item clicked") })
         binding.exercisesList.adapter = adapter
         binding.exercisesList.layoutManager = layoutManager
 

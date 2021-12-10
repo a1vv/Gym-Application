@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.android.october2021.db.entities.*
+import com.example.android.october2021.db.entities.Exercise
+import com.example.android.october2021.db.entities.Session
+import com.example.android.october2021.db.entities.SessionExercise
 
 /**
  * A database that stores SleepNight information.
@@ -18,7 +20,7 @@ import com.example.android.october2021.db.entities.*
     Exercise::class,
     SessionExercise::class
     ],
-    version = 25, exportSchema = false)
+    version = 26, exportSchema = false)
 abstract class GymDatabase : RoomDatabase() {
 
     /**
