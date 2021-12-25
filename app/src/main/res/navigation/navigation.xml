@@ -5,7 +5,7 @@
     android:id="@+id/navigation"
     app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/workoutsFragment"
+        android:id="@+id/exercisesFragment"
         android:name="com.example.android.october2021.exercises.ExercisesFragment"
         android:label="fragment_content_view" />
     <fragment
@@ -15,46 +15,59 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_workoutsFragment"
-            app:destination="@id/workoutsFragment"
+            app:destination="@id/exercisesFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_homeFragment_to_sessionFragment"
-            app:destination="@id/sessionFragment"
+            app:destination="@id/session_navigation"
             app:popUpTo="@id/homeFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/sessionFragment"
-        android:name="com.example.android.october2021.sessions.SessionFragment"
-        android:label="SessionFragment" >
+
+    <navigation
+        android:id="@+id/session_navigation"
+        app:startDestination="@id/sessionFragment">
         <argument
             android:name="sessionId"
-            app:argType="long"
-            android:defaultValue="-1L" />
-        <action
-            android:id="@+id/action_sessionFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_sessionFragment_to_exercisePickerFragment"
-            app:destination="@id/exercisePickerFragment" />
+            android:defaultValue="-1L"
+            app:argType="long" />
         <argument
             android:name="exerciseId"
-            app:argType="long"
-            android:defaultValue="-1L" />
-    </fragment>
-    <fragment
-        android:id="@+id/exercisePickerFragment"
-        android:name="com.example.android.october2021.exercises.ExercisePickerFragment"
-        android:label="ExercisePickerFragment" >
-        <action
-            android:id="@+id/action_exercisePickerFragment_to_sessionFragment"
-            app:destination="@id/sessionFragment"
-            app:popUpTo="@id/homeFragment" />
-        <argument
-            android:name="sessionId"
-            app:argType="long"
-            android:defaultValue="-1L" />
-    </fragment>
+            android:defaultValue="-1L"
+            app:argType="long" />
+        <fragment
+            android:id="@+id/sessionFragment"
+            android:name="com.example.android.october2021.sessions.SessionFragment"
+            android:label="SessionFragment">
+            <argument
+                android:name="sessionId"
+                android:defaultValue="-1L"
+                app:argType="long" />
+            <argument
+                android:name="exerciseId"
+                android:defaultValue="-1L"
+                app:argType="long" />
+            <action
+                android:id="@+id/action_sessionFragment_to_homeFragment"
+                app:destination="@id/homeFragment"
+                app:popUpTo="@id/homeFragment"
+                app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_sessionFragment_to_exercisePickerFragment"
+                app:destination="@id/exercisePickerFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/exercisePickerFragment"
+            android:name="com.example.android.october2021.exercises.ExercisePickerFragment"
+            android:label="ExercisePickerFragment">
+            <action
+                android:id="@+id/action_exercisePickerFragment_to_sessionFragment"
+                app:destination="@id/sessionFragment"
+                app:popUpTo="@id/homeFragment" />
+            <argument
+                android:name="sessionId"
+                android:defaultValue="-1L"
+                app:argType="long" />
+        </fragment>
+    </navigation>
 </navigation>

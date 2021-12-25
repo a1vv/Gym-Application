@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.october2021.R
@@ -40,11 +39,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val sessionSource = GymDatabase.getInstance(application).gymDatabaseDAO
         val viewModelFactory = HomeViewModelFactory(sessionSource, application)
         val homeViewModel = ViewModelProvider(
-            this, viewModelFactory
+            requireActivity(), viewModelFactory
         ).get(HomeViewModel::class.java)
 
         binding.homeViewModel = homeViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
@@ -80,12 +79,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         })
 
-        homeViewModel.navigateToSession.observe(viewLifecycleOwner, { session ->
-            val extras = FragmentNavigatorExtras(binding.fab to "fab")
-            session?.let {
+
+        homeViewModel.navigateToSession.observe(viewLifecycleOwner, { sessionId ->
+            sessionId?.let {
                 this.findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToSessionFragment(session),
-                    extras
+                    HomeFragmentDirections.actionHomeFragmentToSessionFragment(sessionId),
                 )
                 homeViewModel.onSessionNavigated()
             }

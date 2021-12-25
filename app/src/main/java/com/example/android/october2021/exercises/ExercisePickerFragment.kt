@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.october2021.R
 import com.example.android.october2021.databinding.FragmentExercisePickerBinding
@@ -21,9 +21,8 @@ class ExercisePickerFragment : Fragment(R.layout.fragment_exercise_picker) {
         val application = requireNotNull(this.activity).application
         val dataSource = GymRepository(GymDatabase.getInstance(application))
         val viewModelFactory = ExercisePickerViewModelFactory(dataSource, application)
-        val viewModel = ViewModelProvider(
-            this, viewModelFactory
-        ).get(ExercisePickerViewModel::class.java)
+        val viewModel : ExercisePickerViewModel by navGraphViewModels(R.id.session_navigation){viewModelFactory}
+
 
         // get arguments from bundle
         val sessionId = ExercisePickerFragmentArgs.fromBundle(requireArguments()).sessionId

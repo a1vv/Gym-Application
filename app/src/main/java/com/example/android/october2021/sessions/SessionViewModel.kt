@@ -32,30 +32,27 @@ class SessionViewModel(
 
 
     init {
-        Log.d("SVM", "Argument Session ID is $sessionId")
-        // Create new Session if none was submitted
-        if (sessionId < 0) {
-            //  run blocking to ensure that a new sessionId gets set
-            runBlocking {
-                sessionId = addNewSession()
-            }
-            Log.d("SVM", "New sID: $sessionId")
-        }
+        Log.d("SVM", "INIT: argSessionId is $sessionId")
         initializeSession()
     }
 
     private fun initializeSession() {
         uiScope.launch {
             updateSessionExerciseList()
+            updateSession()
         }
     }
 
-    /**
-     * Adds a new session to database and returns its ID
-     */
-    private suspend fun addNewSession(): Long {
-        return withContext(Dispatchers.IO) {
-            database.insertSession(Session())
+
+    fun updateSession(argSessionId : Long) {
+        sessionId = argSessionId
+        initializeSession()
+    }
+
+    private suspend fun updateSession() {
+        session.value = withContext(Dispatchers.IO) {
+            Log.d("SVM","updateSession with sessionId: $sessionId")
+            database.getSession(sessionId)
         }
     }
 

@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -46,12 +46,14 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         val viewModelFactory = SessionViewModel.SessionViewModelFactory(
             GymRepository(GymDatabase.getInstance(application)), application, argSessionId
         )
-        val viewModel = ViewModelProvider(
-            this, viewModelFactory
-        ).get(SessionViewModel::class.java)
+
+        val viewModel : SessionViewModel by navGraphViewModels(R.id.session_navigation){viewModelFactory}
+        if(argSessionId > -1) {
+            viewModel.updateSession(argSessionId)
+        }
 
         binding.sessionViewModel = viewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         // send exerciseId to viewModel
         viewModel.onExerciseAdded(argExerciseId)
@@ -73,7 +75,8 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         binding.exercisesList.adapter = adapter
         binding.exercisesList.layoutManager = layoutManager
 
-        // submit a new list to viewModel every time it gets updated
+
+        // submit a new list to adapter every time it gets updated in viewModel
         viewModel.sessionExerciseList.observe(viewLifecycleOwner, {
             Log.d("SF", "SessionExerciseList updated")
             it?.let {
@@ -90,9 +93,17 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         })
 
 
+        // add sessionId as argument in a bundle, pass to fragments
+        val bundle = Bundle()
+        bundle.putLong("sessionId",argSessionId)
+
+        val sessionInfo = SessionInfo()
+        sessionInfo.arguments = bundle
+
+
         // list of fragments for viewpager
         val fragmentList = arrayListOf(
-            SessionInfo(),
+            sessionInfo,
             SessionSettings()
         )
 

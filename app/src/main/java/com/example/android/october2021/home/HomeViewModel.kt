@@ -1,11 +1,13 @@
 package com.example.android.october2021.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.october2021.db.GymDatabaseDAO
+import com.example.android.october2021.db.entities.Session
 import kotlinx.coroutines.*
 
 class HomeViewModel(val database: GymDatabaseDAO, application: Application) : AndroidViewModel(application) {
@@ -48,7 +50,9 @@ class HomeViewModel(val database: GymDatabaseDAO, application: Application) : An
     }
 
     fun onNewSessionClicked() {
-        navigateToSession.value = -1
+        Log.d("HVM","newSession clicked.")
+        uiScope.launch { navigateToSession.value = addNewSession() }
+
     }
 
     fun onClearSessions() {
@@ -57,6 +61,15 @@ class HomeViewModel(val database: GymDatabaseDAO, application: Application) : An
         }
     }
 
+    /**
+     * Adds a new session to database and returns its ID
+     */
+    private suspend fun addNewSession(): Long {
+        return withContext(Dispatchers.IO) {
+            Log.d("HVM","Session insertion")
+            database.insertSession(Session())
+        }
+    }
     private suspend fun clearSessionsDatabase() {
         withContext(Dispatchers.IO) {
             database.clearSessions()

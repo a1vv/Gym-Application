@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.october2021.R
 import com.example.android.october2021.databinding.FragmentExercisesBinding
@@ -21,10 +21,9 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises) {
         val application = requireNotNull(this.activity).application
         val dataSource = GymRepository(GymDatabase.getInstance(application))
         val viewModelFactory = ExercisesViewModelFactory(dataSource, application)
-        val exercisesViewModel = ViewModelProvider(
-            this, viewModelFactory).get(ExercisesViewModel::class.java)
+        val exercisesViewModel : ExercisesViewModel by viewModels{viewModelFactory}
         binding.exercisesViewModel = exercisesViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
