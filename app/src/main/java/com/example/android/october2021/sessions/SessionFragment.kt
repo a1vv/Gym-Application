@@ -48,9 +48,6 @@ class SessionFragment : Fragment(R.layout.fragment_session) {
         )
 
         val viewModel : SessionViewModel by navGraphViewModels(R.id.session_navigation){viewModelFactory}
-        if(argSessionId > -1) {
-            viewModel.updateSession(argSessionId)
-        }
 
         binding.sessionViewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner

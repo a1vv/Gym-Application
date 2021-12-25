@@ -43,12 +43,6 @@ class SessionViewModel(
         }
     }
 
-
-    fun updateSession(argSessionId : Long) {
-        sessionId = argSessionId
-        initializeSession()
-    }
-
     private suspend fun updateSession() {
         session.value = withContext(Dispatchers.IO) {
             Log.d("SVM","updateSession with sessionId: $sessionId")

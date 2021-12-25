@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="sessionViewModel"
             type="com.example.android.october2021.sessions.SessionViewModel" />
@@ -16,26 +16,26 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_sessionId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@{sessionViewModel.session.sessionId}"
+            tools:text="28"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="SESSION INFO" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/info"
+            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView2"
-            app:sessionInfo="@{sessionViewModel.session}" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:session_time="@{sessionViewModel.session}"
+            app:layout_constraintStart_toEndOf="@+id/tv_sessionId"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sessionId" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
