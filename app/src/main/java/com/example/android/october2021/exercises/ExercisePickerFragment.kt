@@ -30,6 +30,8 @@ class ExercisePickerFragment : Fragment(R.layout.fragment_exercise_picker) {
 
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
+        // set list to scroll from bottom to top
+        layoutManager.reverseLayout = true
 
         val adapter = ExercisesAdapter(ExerciseListener { exerciseId ->
             Log.d("EF", "exercise item clicked")
@@ -37,7 +39,7 @@ class ExercisePickerFragment : Fragment(R.layout.fragment_exercise_picker) {
                 .navigate(ExercisePickerFragmentDirections.actionExercisePickerFragmentToSessionFragment(sessionId,exerciseId))
             viewModel.onSessionNavigated()
         })
-
+        binding.viewModel = viewModel
         binding.exercisesList.adapter = adapter
         binding.exercisesList.layoutManager = layoutManager
 
