@@ -28,10 +28,10 @@ class ExercisePickerFragment : Fragment(R.layout.fragment_exercise_picker) {
         val sessionId = ExercisePickerFragmentArgs.fromBundle(requireArguments()).sessionId
         Log.d("EPF","sID: $sessionId received from SF")
 
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        // set list to scroll from bottom to top
-        layoutManager.reverseLayout = true
+        val layoutManager = LinearLayoutManager(context).apply {
+            orientation = LinearLayoutManager.VERTICAL
+            reverseLayout = true // set list to scroll from bottom to top
+        }
 
         val adapter = ExercisesAdapter(ExerciseListener { exerciseId ->
             Log.d("EF", "exercise item clicked")
